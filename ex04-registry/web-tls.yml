@@ -1,0 +1,73 @@
+---
+- name: Configure webserver with nginx
+  hosts: webservers
+  become: True
+  vars:
+    key_file:  /etc/nginx/ssl/nginx.key
+    cert_file: /etc/nginx/ssl/nginx.crt
+    conf_file: /etc/nginx/sites-available/default
+    server_name: localhost
+  tasks:
+  - name: install nginx
+    ansible.builtin.apt:
+       name: nginx
+       update_cache: yes
+
+#  - name: debug ansible host name
+#    ansible.builtin.debug:
+#      var: ansible_host
+
+  - name: create dir
+    ansible.builtin.file:
+      path: /etc/nginx/ssl
+      state: directory
+      owner: root
+      group: root
+      mode: 0770
+  - name: copy TLS pk
+    ansible.builtin.copy:
+      src:  files/nginx.key
+      dest: "{{ key_file }}"
+      owner: root
+      mode:  0600
+  - name: run_something
+    ansible.builtin.command: hostname -I
+    register: hostip
+  - name: debug host ip address
+    ansible.builtin.debug:
+      var: hostip.stdout_lines
+  - name: copy TLS pubk
+    ansible.builtin.copy:
+      src:  files/nginx.crt
+      dest: "{{ cert_file }}"
+      owner: root
+      mode:  0600
+  - name: copy nginx config file
+    ansible.builtin.template:
+       src: templates/nginx.conf.j2
+       dest: /etc/nginx/sites-available/default
+  - name: enable configuration
+    ansible.builtin.file:
+      dest: /etc/nginx/sites-enabled/default
+      src: /etc/nginx/sites-available/default
+      state: link
+  - name: copy index.html
+    ansible.builtin.template:
+      src: templates/index.html.j2
+      dest: /usr/share/nginx/html/index.html
+      mode: 0644
+  - name: restart nginx
+    ansible.builtin.service:
+      name: nginx
+      state: reloaded
+  - name: query nginx
+    ansible.builtin.command: systemctl status nginx.service
+    register: output
+  - name: show nginx status
+    ansible.builtin.debug:
+      var: output
+#  handlers:
+#    - name: restart nginx
+#      ansible.builtin.service:3
+#       name: nginx
+#       state: reloaded

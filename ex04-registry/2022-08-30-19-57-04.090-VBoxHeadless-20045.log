@@ -1,0 +1,12 @@
+Log created: 2022-08-30T19:57:04.903126000Z
+Process ID:  20045 (0x4e4d)
+Parent PID:  1 (0x1)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: ex04-registry_vag3_1661882560293_65160
+Arg[3]: --startvm
+Arg[4]: 090209e1-3a3e-4215-9fc8-caa9101d0c28
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2
