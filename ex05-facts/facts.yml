@@ -1,0 +1,11 @@
+---
+ - name: exercesise demo of local facts
+   become: True
+   hosts: vag1
+   tasks:
+    - name: "print all local facts"
+      ansible.builtin.debug:
+        var: ansible_local
+    - name: print detailed facts
+      ansible.builtin.debug:
+        msg: "person name is {{ansible_local.person.person.displayname}}"
