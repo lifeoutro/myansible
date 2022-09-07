@@ -71,3 +71,5 @@
 #      ansible.builtin.service:3
 #       name: nginx
 #       state: reloaded
+  - name: ec2-fct
+    ec2_facts:

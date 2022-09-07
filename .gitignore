@@ -1,2 +1,4 @@
 .vagrant/*
 .gitignore
+ex*/*.log
+ex05-facts/.vag*
